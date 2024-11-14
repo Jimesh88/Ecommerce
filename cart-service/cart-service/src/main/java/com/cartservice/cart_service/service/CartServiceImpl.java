@@ -8,10 +8,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.stream.Collectors;
-
 @Service
 public class CartServiceImpl implements CartService {
     private final WebClient.Builder webClientBuilder;
@@ -25,7 +21,8 @@ public class CartServiceImpl implements CartService {
     }
 
     @Override
-    public Mono<Cart> addProductToCart(Long cartid, Long productId) {
+    public Mono<Cart> addProductToCart(Long cartId, Long productId) {
+        // Step 1: Fetch product details from Product Service
         Mono<Product> productMono = webClientBuilder.baseUrl(productServiceBaseUrl)
                 .build()
                 .get()
@@ -33,57 +30,81 @@ public class CartServiceImpl implements CartService {
                 .retrieve()
                 .bodyToMono(Product.class);
 
+        // Step 2: Find the cart by cartId, or return error if not found
+        return productMono.flatMap(product ->
+                cartRepository.findById(cartId)
+                        .switchIfEmpty(Mono.error(new RuntimeException("Cart not found")))
+                        .flatMap(cart -> {
+                            // Step 3: Update the cart with the new productId and update totalPrice
+                            cart.setproductId(productId);  // Set the product ID in the cart
+                            cart.setTotalPrice(product.getPrice());  // Set the price of the single product
 
-        return productMono.flatMap(product -> cartRepository.findById(cartid)
-                .switchIfEmpty(Mono.error(new RuntimeException("Cart not found")))
-                .flatMap(cart -> {
-                    cart.addProduct(product.getId());
-                    cart.setTotalPrice(cart.getTotalPrice() + product.getPrice());
-                    return cartRepository.save(cart);
-                }));
+                            // Step 4: Save the updated cart
+                            return cartRepository.save(cart);
+                        })
+        );
     }
 
+
     @Override
-    public Mono<Cart> removeProductFromCart(Long cartid, Long productId) {
-        return cartRepository.findById(cartid)
+    public Mono<Cart> removeProductFromCart(Long cartId, Long productId) {
+        // Step 1: Fetch the cart from the repository by cartId
+        return cartRepository.findById(cartId)
                 .switchIfEmpty(Mono.error(new RuntimeException("Cart not found")))
                 .flatMap(cart -> {
-                    cart.removeProduct(productId);
-                    // Assuming you have a way to get the product price
-                    WebClient webClient = webClientBuilder.baseUrl(productServiceBaseUrl).build();
-                    return webClient.get()
+                    // Step 2: Check if the cart has the given productId, if so, remove it
+                    if (cart.getproductId().equals(productId)) {
+                        // Step 3: Fetch the product to get its price
+                        return webClientBuilder.baseUrl(productServiceBaseUrl)
+                                .build()
+                                .get()
+                                .uri("/{productId}", productId)
+                                .retrieve()
+                                .bodyToMono(Product.class)
+                                .flatMap(product -> {
+                                    // Step 4: Set the productId to null and totalPrice to 0 (since no product in the cart)
+                                    cart.setproductId(null);
+                                    cart.setTotalPrice(0.0);
+
+                                    // Step 5: Save the updated cart
+                                    return cartRepository.save(cart);
+                                });
+                    } else {
+                        return Mono.error(new RuntimeException("Product not found in cart"));
+                    }
+                });
+    }
+
+
+    @Override
+    public Mono<Cart> viewCartItems(Long cartId) {
+        // Step 1: Find the cart by cartId
+        return cartRepository.findById(cartId)
+                .switchIfEmpty(Mono.error(new RuntimeException("Cart not found")))
+                .flatMap(cart -> {
+                    // Step 2: Check if the cart has a productId
+                    Long productId = cart.getproductId();
+
+                    // If there's no product in the cart, we return the cart with a total price of 0
+                    if (productId == null) {
+                        cart.setTotalPrice(0.0);  // Set total price to 0 if no product
+                        return Mono.just(cart);
+                    }
+
+                    // Step 3: Fetch the product details from the Product Service
+                    return webClientBuilder.baseUrl(productServiceBaseUrl)
+                            .build()
+                            .get()
                             .uri("/{productId}", productId)
                             .retrieve()
                             .bodyToMono(Product.class)
                             .flatMap(product -> {
-                                cart.setTotalPrice(cart.getTotalPrice() - product.getPrice());
-                                return cartRepository.save(cart);
+                                // Step 4: Set the product details (price) into the cart
+                                cart.setTotalPrice(product.getPrice());
+                                return Mono.just(cart); // Return the cart with the product details and total price
                             });
                 });
     }
 
-    @Override
-    public Mono<Cart> viewCartItems(Long cartid) {
-        return cartRepository.findById(cartid)
-                .switchIfEmpty(Mono.error(new RuntimeException("Cart not found")))
-                .flatMap(cart -> {
-                    WebClient webClient = webClientBuilder.baseUrl(productServiceBaseUrl).build();
-                    List<Mono<Product>> productMonos = cart.getProductIds().stream()
-                            .map(productId -> webClient.get()
-                                    .uri("/{productId}", productId)
-                                    .retrieve()
-                                    .bodyToMono(Product.class))
-                            .collect(Collectors.toList());
 
-                    return Mono.zip(productMonos, products -> {
-                        List<Product> productList = new ArrayList<>();
-                        for (Object obj : products) {
-                            productList.add((Product) obj);
-                        }
-                        double totalPrice = productList.stream().mapToDouble(Product::getPrice).sum();
-                        cart.setTotalPrice(totalPrice);
-                        return cart;
-                    });
-                });
-    }
 }

@@ -12,7 +12,7 @@ public class R2dbcConfig{
 
     @Bean
     public ConnectionFactory connectionFactory() {
-        return ConnectionFactoryBuilder.withUrl("r2dbc:h2:tcp://localhost/~/testdb;DB_CLOSE_DELAY=-1")
+        return ConnectionFactoryBuilder.withUrl("r2dbc:h2:mem:///testdb;DB_CLOSE_DELAY=-1")
                 .username("sa")
                 .password("")
                 .build();
