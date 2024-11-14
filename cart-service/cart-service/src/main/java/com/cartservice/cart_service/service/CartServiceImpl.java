@@ -11,7 +11,7 @@ import reactor.core.publisher.Mono;
 @Service
 public class CartServiceImpl implements CartService {
     private final WebClient.Builder webClientBuilder;
-    private final String productServiceBaseUrl = "http://localhost:8080/products";
+    private final String productServiceBaseUrl = "http://product-service/products";
 
     @Autowired
     CartRepository cartRepository;

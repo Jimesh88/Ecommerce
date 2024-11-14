@@ -17,6 +17,7 @@
     <modules>
         <module>product-service/product-service</module>
         <module>cart-service/cart-service</module>
+        <module>eureka-server</module>
     </modules>
 
 </project>
