@@ -1,0 +1,26 @@
+spring:
+  application:
+    name: api-gateway
+
+  cloud:
+    discovery:
+      enabled: true
+    gateway:
+      routes:
+        - id: cart-service
+          uri: lb://cart-service  # lb:// means using load balancing to find the Cart Service via Eureka
+          predicates:
+            - Path=/cart/**  # This route will be mapped to Cart Service
+
+        - id: product-service
+          uri: lb://product-service  # lb:// means using load balancing to find the Product Service via Eureka
+          predicates:
+            - Path=/products/**  # This route will be mapped to Product Service
+
+    eureka:
+             client:
+               service-url:
+                 defaultZone: http://localhost:8761/eureka # Eureka server URL
+
+    server:
+      port: 8080 # API Gateway running on port 8083 (or any port you prefer)

@@ -18,6 +18,7 @@
         <module>product-service/product-service</module>
         <module>cart-service/cart-service</module>
         <module>eureka-server</module>
+        <module>apigateway-service</module>
     </modules>
 
 </project>
