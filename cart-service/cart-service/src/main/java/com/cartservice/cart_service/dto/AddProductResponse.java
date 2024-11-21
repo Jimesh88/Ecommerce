@@ -1,32 +1,12 @@
-package com.cartservice.cart_service.model;
+package com.cartservice.cart_service.dto;
 
-import org.springframework.data.annotation.Id;
-import org.springframework.data.relational.core.mapping.Column;
-import org.springframework.data.relational.core.mapping.Table;
-
-@Table("cart_item")
-public class CartItem {
-
-    @Id
-    private Long id;
-
-    @Column("cart_id")
+public class AddProductResponse {
     private Long cartId;
-
-    @Column("product_id")
     private Long productId;
-
     private int quantity;
+    private double totalPrice;
 
     // Getters and Setters
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
     public Long getCartId() {
         return cartId;
     }
@@ -51,4 +31,11 @@ public class CartItem {
         this.quantity = quantity;
     }
 
+    public double getTotalPrice() {
+        return totalPrice;
+    }
+
+    public void setTotalPrice(double totalPrice) {
+        this.totalPrice = totalPrice;
+    }
 }

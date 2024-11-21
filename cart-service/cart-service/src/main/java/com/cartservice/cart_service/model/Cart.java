@@ -2,8 +2,9 @@ package com.cartservice.cart_service.model;
 
 import org.springframework.data.annotation.Id;
 import org.springframework.data.relational.core.mapping.Table;
-import java.util.List;
 
+import java.util.ArrayList;
+import java.util.List;
 
 
 @Table("cart")
@@ -12,9 +13,11 @@ public class Cart {
     @Id
     private Long cartId;
 
-    private List<CartItem> items;
+    private double totalPrice;
 
-    // Getters and Setters
+
+
+
     public Long getCartId() {
         return cartId;
     }
@@ -23,13 +26,11 @@ public class Cart {
         this.cartId = cartId;
     }
 
-    public List<CartItem> getItems() {
-        return items;
+    public double getTotalPrice() {
+        return totalPrice;
     }
 
-    public void setItems(List<CartItem> items) {
-        this.items = items;
+    public void setTotalPrice(double totalPrice) {
+        this.totalPrice = totalPrice;
     }
-
-
 }
