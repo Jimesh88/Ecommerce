@@ -1,18 +1,19 @@
 package com.productservice.product_service.model;
 
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
 import org.springframework.data.annotation.Id;
-import javax.persistence.Table;
+import org.springframework.data.relational.core.mapping.Table;
 
-@Table(name = "product")
+
+@Table("product")
 public class Product {
 
     @Id
     private Long id;
     private String name;
     private double price;
+    private int quantity; // This represents the stock quantity.
 
+    // Getters and Setters
     public Long getId() {
         return id;
     }
@@ -35,5 +36,13 @@ public class Product {
 
     public void setPrice(double price) {
         this.price = price;
+    }
+
+    public int getQuantity() {
+        return quantity;
+    }
+
+    public void setQuantity(int quantity) {
+        this.quantity = quantity;
     }
 }

@@ -15,14 +15,14 @@ public class CartController {
     @Autowired
     private CartService cartService;
 
-    @PostMapping("/{cartId}/add/{productId}")
-    public Mono<Cart> addProductToCart(@PathVariable Long cartId, @PathVariable Long productId) {
-        return cartService.addProductToCart(cartId, productId);
+    @PostMapping("/{cartId}/add/{productId}/{quantity}")
+    public Mono<Cart> addProductToCart(@PathVariable Long cartId, @PathVariable Long productId, @PathVariable int quantity) {
+        return cartService.addProductToCart(cartId, productId,quantity);
     }
 
-    @DeleteMapping("/{cartId}/remove/{productId}")
-    public Mono<Cart> removeProductFromCart(@PathVariable Long cartId, @PathVariable Long productId) {
-        return cartService.removeProductFromCart(cartId, productId);
+    @DeleteMapping("/{cartId}/remove/{productId}/{quantity}")
+    public Mono<Cart> removeProductFromCart(@PathVariable Long cartId, @PathVariable Long productId,@PathVariable int quantity) {
+        return cartService.removeProductFromCart(cartId, productId,quantity);
     }
 
     @GetMapping("/{cartId}")

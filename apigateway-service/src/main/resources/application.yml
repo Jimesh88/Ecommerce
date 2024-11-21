@@ -25,11 +25,3 @@ spring:
     server:
       port: 8080 # API Gateway running on port 8083 (or any port you prefer)
 
-    logging:
-        level:
-          org.springframework.security: DEBUG
-          org.springframework.web: DEBUG
-
-    jwt:
-        secret: "1234567890"
-        expirationMs: 3600000  # 1 hour in milliseconds
