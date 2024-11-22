@@ -87,47 +87,7 @@ public class CartServiceImpl implements CartService {
                             return response;
                         }));
     }
-//        return cartRepository.findById(cartId)
-//                .switchIfEmpty(Mono.error(new RuntimeException("Cart not found")))
-//                .flatMap(cart -> {
-//                    // Fetch the product from product-service using WebClient
-//                    return webClientBuilder.baseUrl(productServiceBaseUrl)
-//                            .build()
-//                            .get()
-//                            .uri("/{productId}", productId)
-//                            .retrieve()
-//                            .bodyToMono(Product.class)
-//                            .switchIfEmpty(Mono.error(new RuntimeException("Product not found")))
-//                            .flatMap(product -> {
-//                                // Check if there is enough stock
-//                                if (product.getQuantity() < quantity) {
-//                                    return Mono.error(new RuntimeException("Not enough stock for product: " + productId));
-//                                }
-//
-//                                // Check if the product already exists in the cart
-//                                return cartItemRepository.findByCartId(cartId)
-//                                        .filter(item -> item.getProductId().equals(productId))
-//                                        .next() // Get the first match
-//                                        .flatMap(existingItem -> {
-//                                            if (existingItem != null) {
-//                                                // If the product is already in the cart, just update the quantity
-//                                                existingItem.setQuantity(existingItem.getQuantity() + quantity);
-//                                                return cartItemRepository.save(existingItem)
-//                                                        .flatMap(savedItem -> updateProductStockAndSaveCart(productId, quantity, cart));
-//                                            } else {
-//                                                // Otherwise, create a new CartItem and add it to the cart
-//                                                CartItem newItem = new CartItem();
-//                                                newItem.setCartId(cartId);
-//                                                newItem.setProductId(productId);
-//                                                newItem.setQuantity(quantity);
-//
-//                                                return cartItemRepository.save(newItem)
-//                                                        .flatMap(savedItem -> updateProductStockAndSaveCart(productId, quantity, cart));
-//                                            }
-//                                        });
-//                            });
-//                });
-//    }
+
 
     @Override
     public Mono<CartResponse> removeProductFromCart(Long cartId, Long productId, int quantity) {
