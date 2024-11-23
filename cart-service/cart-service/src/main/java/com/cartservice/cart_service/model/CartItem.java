@@ -16,7 +16,29 @@ public class CartItem {
     @Column("product_id")
     private Long productId;
 
+    @Column("product_price")
+    private double productPrice;
+
     private int quantity;
+
+    public double getProductPrice() {
+        return productPrice;
+    }
+
+    public void setProductPrice(double productPrice) {
+        this.productPrice = productPrice;
+    }
+
+    @Column("product_name")
+    private String productName;
+
+    public String getProductName() {
+        return productName;
+    }
+
+    public void setProductName(String productName) {
+        this.productName = productName;
+    }
 
     // Getters and Setters
     public Long getId() {

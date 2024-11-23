@@ -7,8 +7,8 @@ CREATE TABLE IF NOT EXISTS product (
 );
 
 -- Insert sample product data
-INSERT INTO product (name, price, quantity) VALUES ('Product A', 20.9, 100);
-INSERT INTO product (name, price, quantity) VALUES ('Product B', 15.5, 50);
+INSERT INTO product (name, price, quantity) VALUES ('Product A', 20.0, 100);
+INSERT INTO product (name, price, quantity) VALUES ('Product B', 10.0, 50);
 INSERT INTO product (name, price, quantity) VALUES ('Product C', 30.0, 200);
 
 -- Create cart table
@@ -23,13 +23,15 @@ CREATE TABLE IF NOT EXISTS cart_item (
     cart_id BIGINT,
     product_id BIGINT,
     quantity INT,
+    product_name VARCHAR(255) NOT NULL,
+    product_price DOUBLE NOT NULL,
     FOREIGN KEY (cart_id) REFERENCES cart(cart_id),
     FOREIGN KEY (product_id) REFERENCES product(id)
 );
 
 -- Insert sample cart data
-INSERT INTO cart (total_price) VALUES (250);
+INSERT INTO cart (total_price) VALUES (50);
 
 -- Insert sample cart items
-INSERT INTO cart_item (cart_id, product_id, quantity) VALUES (1, 1, 2);
-INSERT INTO cart_item (cart_id, product_id, quantity) VALUES (1, 2, 1);
+INSERT INTO cart_item (cart_id, product_id, quantity,product_name,product_price) VALUES (1, 1, 2, 'A',20);
+INSERT INTO cart_item (cart_id, product_id, quantity,product_name,product_price) VALUES (1, 2, 1,'B',10);

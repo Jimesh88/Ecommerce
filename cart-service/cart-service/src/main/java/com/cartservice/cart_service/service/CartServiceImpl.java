@@ -1,5 +1,6 @@
 package com.cartservice.cart_service.service;
 
+import com.cartservice.cart_service.dto.CartItemResponse;
 import com.cartservice.cart_service.dto.CartResponse;
 import com.cartservice.cart_service.model.Cart;
 import com.cartservice.cart_service.model.CartItem;
@@ -10,6 +11,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class CartServiceImpl implements CartService {
@@ -67,6 +71,8 @@ public class CartServiceImpl implements CartService {
                                                 newItem.setCartId(cartId);
                                                 newItem.setProductId(productId);
                                                 newItem.setQuantity(quantity);
+                                                newItem.setProductName(product.getName());
+                                                newItem.setProductPrice(product.getPrice());
 
                                                 return cartItemRepository.save(newItem)
                                                         .flatMap(savedItem -> {
@@ -83,11 +89,21 @@ public class CartServiceImpl implements CartService {
                         .map(items -> {
                             CartResponse response = new CartResponse();
                             response.setCart(cart);
-                            response.setItems(items);
+
+                            // Create a list of CartItemResponse for the items
+                            List<CartItemResponse> itemResponses = items.stream().map(item -> {
+                                CartItemResponse itemResponse = new CartItemResponse();
+                                itemResponse.setId(item.getId());
+                                itemResponse.setProductName(item.getProductName());
+                                itemResponse.setProductPrice(item.getProductPrice());
+                                itemResponse.setQuantity(item.getQuantity());
+                                return itemResponse;
+                            }).collect(Collectors.toList());
+
+                            response.setItems(itemResponses); // Set the CartItemResponses to CartResponse
                             return response;
                         }));
     }
-
 
     @Override
     public Mono<CartResponse> removeProductFromCart(Long cartId, Long productId, int quantity) {
@@ -138,11 +154,21 @@ public class CartServiceImpl implements CartService {
                         .map(items -> {
                             CartResponse response = new CartResponse();
                             response.setCart(cart);
-                            response.setItems(items);
+
+                            // Create a list of CartItemResponse for the items
+                            List<CartItemResponse> itemResponses = items.stream().map(item -> {
+                                CartItemResponse itemResponse = new CartItemResponse();
+                                itemResponse.setId(item.getId());
+                                itemResponse.setProductName(item.getProductName());
+                                itemResponse.setProductPrice(item.getProductPrice());
+                                itemResponse.setQuantity(item.getQuantity());
+                                return itemResponse;
+                            }).collect(Collectors.toList());
+
+                            response.setItems(itemResponses); // Set the CartItemResponses to CartResponse
                             return response;
                         }));
     }
-
 
 
     @Override
@@ -154,10 +180,23 @@ public class CartServiceImpl implements CartService {
                         .map(items -> {
                             CartResponse response = new CartResponse();
                             response.setCart(cart);
-                            response.setItems(items);
+
+                            // Map CartItems to CartItemResponse
+                            List<CartItemResponse> cartItemResponses = items.stream().map(item -> {
+                                CartItemResponse itemResponse = new CartItemResponse();
+                                itemResponse.setId(item.getId());  // Set id from CartItem
+                                itemResponse.setProductName(item.getProductName());  // Set product name
+                                itemResponse.setProductPrice(item.getProductPrice());  // Set product price
+                                itemResponse.setQuantity(item.getQuantity());  // Set quantity
+                                return itemResponse;
+                            }).collect(Collectors.toList());
+
+                            // Set the list of CartItemResponse to the CartResponse
+                            response.setItems(cartItemResponses);
                             return response;
                         }));
     }
+
 
 
     // Helper method to update the product stock and save the updated cart

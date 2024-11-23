@@ -6,9 +6,8 @@ import java.util.List;
 
 public class CartResponse {
     private Cart cart;
-    private List<CartItem> items;
+    private List<CartItemResponse> items;  // List of CartItemResponse
 
-    // Getters and Setters
     public Cart getCart() {
         return cart;
     }
@@ -17,11 +16,11 @@ public class CartResponse {
         this.cart = cart;
     }
 
-    public List<CartItem> getItems() {
+    public List<CartItemResponse> getItems() {
         return items;
     }
 
-    public void setItems(List<CartItem> items) {
+    public void setItems(List<CartItemResponse> items) {
         this.items = items;
     }
 }

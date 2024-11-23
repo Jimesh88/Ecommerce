@@ -1,12 +1,11 @@
 package com.cartservice.cart_service.dto;
 
-public class AddProductResponse {
+public class AddProductRequest {
     private Long cartId;
     private Long productId;
     private int quantity;
-    private double totalPrice;
 
-    // Getters and Setters
+    // Getters and setters
     public Long getCartId() {
         return cartId;
     }
@@ -29,13 +28,5 @@ public class AddProductResponse {
 
     public void setQuantity(int quantity) {
         this.quantity = quantity;
-    }
-
-    public double getTotalPrice() {
-        return totalPrice;
-    }
-
-    public void setTotalPrice(double totalPrice) {
-        this.totalPrice = totalPrice;
     }
 }
