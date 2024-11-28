@@ -38,5 +38,5 @@ logging:
         enabled: false
 
 jwt:
-  secret-key: "1234567"  # Use a secure and long secret key here
+  secret-key: "6SES5HkdroB3kIMoQwaAw3nINu8YaY0eZ4EAInMxm50="  # Use a secure and long secret key here
   expiration-time: 86400000
