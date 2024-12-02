@@ -26,8 +26,5 @@ public class AuthenticationController {
         return ResponseEntity.ok(token);  // Return the JWT token
     }
 
-    @GetMapping("/csrf-token") public ResponseEntity<CsrfToken> getCsrfToken(HttpServletRequest request) {
-        CsrfToken csrfToken = (CsrfToken) request.getAttribute(CsrfToken.class.getName());
-        return ResponseEntity.ok(csrfToken);
-    }
+
 }
